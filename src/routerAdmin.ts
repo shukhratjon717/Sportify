@@ -12,6 +12,4 @@ routerAdmin
   .get("/signup", shopController.getSignup)
   .post("/signup", shopController.processSignup);
 
-  
-
 export default routerAdmin;
