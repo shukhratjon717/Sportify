@@ -14,7 +14,7 @@ shopController.getLogin = (req: Request, res: Response) => {
   try {
     res.send("You are on Login Page");
   } catch (err) {
-    console.log("Error, GoHome", err);
+    console.log("Error, getLogin", err);
   }
 };
 
@@ -22,7 +22,7 @@ shopController.getSignup = (req: Request, res: Response) => {
   try {
     res.send("You are on Signup Page");
   } catch (err) {
-    console.log("Error, GoHome", err);
+    console.log("Error, getSignup", err);
   }
 };
 
