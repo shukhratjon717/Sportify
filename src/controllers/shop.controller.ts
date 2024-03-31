@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { T } from "../libs/types/common";
 import UserService from "../mdels/User.service";
-import { UserInput } from "../libs/types/user";
+import { LoginInput, UserInput } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
 
 const shopController: T = {};
@@ -30,19 +30,26 @@ shopController.getSignup = (req: Request, res: Response) => {
   }
 };
 
-shopController.processLogin = (req: Request, res: Response) => {
+shopController.processLogin = async (req: Request, res: Response) => {
   try {
     console.log("processLogin");
-    res.send("ProcessLogin Page");
+    console.log("req.body:", req.body);
+    const input: LoginInput = req.body;
+
+    const userService = new UserService()
+    const result = await userService.processLogin(input);
+
+    res.send(result);
   } catch (err) {
     console.log("Error, getLogin", err);
+    res.send(err)
   }
 };
 
 shopController.processSignup = async (req: Request, res: Response) => {
   try {
     console.log("processSignup");
-    console.log("req.body:", req.body)
+    console.log("req.body:", req.body);
 
     const newUser: UserInput = req.body;
     newUser.userType = UserType.SHOP;
@@ -50,11 +57,10 @@ shopController.processSignup = async (req: Request, res: Response) => {
     const userService = new UserService();
     const result = await userService.processSignup(newUser);
 
-
     res.send(result);
   } catch (err) {
     console.log("Error, processSignup", err);
-    res.send(err)
+    res.send(err);
   }
 };
 

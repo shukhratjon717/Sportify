@@ -27,3 +27,9 @@ export interface UserInput {
   userImage?: string;
   userPoints?: number;
 }
+
+
+export interface LoginInput {
+    userNick:string
+    userPassword: string
+}
