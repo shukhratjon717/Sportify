@@ -2,6 +2,7 @@ import UserModel from "../schema/User.model";
 import { LoginInput, User, UserInput } from "../libs/types/user";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { UserType } from "../libs/enums/user.enum";
+import * as bcrypt from "bcryptjs";
 
 class UserService {
   private readonly userModel;
@@ -14,8 +15,10 @@ class UserService {
     const exist = await this.userModel
       .findOne({ userType: UserType.SHOP })
       .exec();
-    console.log("exist", exist);
     if (exist) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
+
+    const salt = await bcrypt.genSalt();
+    input.userPassword = await bcrypt.hash(input.userPassword, salt);
 
     try {
       const result = await this.userModel.create(input);
@@ -32,14 +35,18 @@ class UserService {
       .exec();
     if (!user) throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
 
-    const isMatch = input.userPassword === user.userPassword;
+    // const isMatch = input.userPassword === user.userPassword;
+
+    const isMatch = await bcrypt.compare(
+        input.userPassword,
+        user.userPassword
+        );
 
     if (!isMatch) {
       throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
     }
 
     return await this.userModel.findById(user._id).exec();
-    
   }
 }
 
