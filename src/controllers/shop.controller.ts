@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { T } from "../libs/types/common";
 import UserService from "../mdels/User.service";
+import { UserInput } from "../libs/types/user";
+import { UserType } from "../libs/enums/user.enum";
 
 const shopController: T = {};
 shopController.goHome = (req: Request, res: Response) => {
@@ -37,12 +39,22 @@ shopController.processLogin = (req: Request, res: Response) => {
   }
 };
 
-shopController.processSignup = (req: Request, res: Response) => {
+shopController.processSignup = async (req: Request, res: Response) => {
   try {
     console.log("processSignup");
-    res.send("ProcessSignup Page");
+    console.log("req.body:", req.body)
+
+    const newUser: UserInput = req.body;
+    newUser.userType = UserType.SHOP;
+
+    const userService = new UserService();
+    const result = await userService.processSignup(newUser);
+
+
+    res.send(result);
   } catch (err) {
     console.log("Error, processSignup", err);
+    res.send(err)
   }
 };
 
