@@ -16,6 +16,7 @@ shopController.goHome = (req: Request, res: Response) => {
 
 shopController.getLogin = (req: Request, res: Response) => {
   try {
+    console.log("getLogin")
     res.send("You are on Login Page");
   } catch (err) {
     console.log("Error, getLogin", err);
@@ -24,6 +25,7 @@ shopController.getLogin = (req: Request, res: Response) => {
 
 shopController.getSignup = (req: Request, res: Response) => {
   try {
+    console.log("getSignup")
     res.send("You are on Signup Page");
   } catch (err) {
     console.log("Error, getSignup", err);
@@ -50,7 +52,6 @@ shopController.processSignup = async (req: Request, res: Response) => {
   try {
     console.log("processSignup");
     console.log("req.body:", req.body);
-
     const newUser: UserInput = req.body;
     newUser.userType = UserType.SHOP;
 

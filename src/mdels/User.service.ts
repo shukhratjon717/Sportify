@@ -17,8 +17,10 @@ class UserService {
       .exec();
     if (exist) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
 
+    console.log("before:", input.userPassword);
     const salt = await bcrypt.genSalt();
     input.userPassword = await bcrypt.hash(input.userPassword, salt);
+    console.log("after:", input.userPassword);
 
     try {
       const result = await this.userModel.create(input);
@@ -37,10 +39,7 @@ class UserService {
 
     // const isMatch = input.userPassword === user.userPassword;
 
-    const isMatch = await bcrypt.compare(
-        input.userPassword,
-        user.userPassword
-        );
+    const isMatch = await bcrypt.compare(input.userPassword, user.userPassword);
 
     if (!isMatch) {
       throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
