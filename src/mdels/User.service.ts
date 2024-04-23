@@ -74,9 +74,10 @@ class UserService {
     if (!isMatch) {
       throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
     }
-
     return await this.userModel.findById(user._id).exec();
   }
-}
+
+ 
+};
 
 export default UserService;

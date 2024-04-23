@@ -3,6 +3,7 @@ import { T } from "../libs/types/common";
 import UserService from "../mdels/User.service";
 import { AdminRequest, LoginInput, UserInput } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
+import Errors, { HttpCode, Message } from "../libs/Errors";
 
 const userService = new UserService();
 
@@ -59,7 +60,6 @@ shopController.processLogin = async (req: AdminRequest, res: Response) => {
     console.log("processLogin");
 
     const input: LoginInput = req.body;
-    const userService = new UserService();
     const result = await userService.processLogin(input);
     // TODO: SESSIONS AUTHENTICATION
     req.session.user = result;
@@ -67,9 +67,26 @@ shopController.processLogin = async (req: AdminRequest, res: Response) => {
       res.send(result);
     });
   } catch (err) {
-    console.log("Error, getLogin", err);
+    console.log("Error, processLogin", err);
+    res.send(err);
+  };
+}
+
+shopController.checkAuthSession = async (
+  req: AdminRequest,
+  res: Response
+) => {
+  try {
+    console.log("checkAuthSession");
+    if (req.session?.user)
+      res.send(`<script> alert("${req.session.user.userNick}) </script>`);
+    else res.send(`<script> alert("${Message.NOT_AUTHENTICATED}") </script>`);
+  } catch (err) {
+    console.log("Error, checkAuthSession:", err);
     res.send(err);
   }
 };
+
+
 
 export default shopController;
