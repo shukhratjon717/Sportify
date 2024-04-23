@@ -19,7 +19,7 @@ class UserService {
     try {
       const result = await this.userModel.create(input);
       result.userPassword = "";
-      return result;
+      return result.toJSON();
     } catch (err) {
       console.log("Error, model:Signup", err);
       throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
