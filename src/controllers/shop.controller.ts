@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { T } from "../libs/types/common";
 import UserService from "../mdels/User.service";
-import { LoginInput, UserInput } from "../libs/types/user";
+import { AdminRequest, LoginInput, UserInput } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
 
 const userService = new UserService();
@@ -35,7 +35,7 @@ shopController.getLogin = (req: Request, res: Response) => {
   }
 };
 
-shopController.processSignup = async (req: Request, res: Response) => {
+shopController.processSignup = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processSignup");
 
@@ -43,14 +43,18 @@ shopController.processSignup = async (req: Request, res: Response) => {
     newUser.userType = UserType.SHOP;
     const result = await userService.processSignup(newUser);
     // TODO: SESSIONS AUTHENTICATION
-    res.send(result);
+
+    req.session.user = result;
+    req.session.save(function () {
+      res.send(result);
+    });
   } catch (err) {
     console.log("Error, processSignup", err);
     res.send(err);
   }
 };
 
-shopController.processLogin = async (req: Request, res: Response) => {
+shopController.processLogin = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processLogin");
 
@@ -58,8 +62,10 @@ shopController.processLogin = async (req: Request, res: Response) => {
     const userService = new UserService();
     const result = await userService.processLogin(input);
     // TODO: SESSIONS AUTHENTICATION
-
-    res.send(result);
+    req.session.user = result;
+    req.session.save(function () {
+      res.send(result);
+    });
   } catch (err) {
     console.log("Error, getLogin", err);
     res.send(err);
