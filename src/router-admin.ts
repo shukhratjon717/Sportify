@@ -2,6 +2,7 @@ import express from "express";
 const routerAdmin = express.Router();
 import shopController from "./controllers/shop.controller";
 import productController from "./controllers/product.controller";
+import { uploadProductImage } from "./libs/utils/uploader";
 
 routerAdmin.get("/", shopController.goHome);
 routerAdmin
@@ -23,6 +24,7 @@ routerAdmin.get(
 routerAdmin.post(
   "/product/create",
   shopController.verifyShop,
+  uploadProductImage.single("productImage"),
   productController.createNewProduct
 );
 routerAdmin.post(
