@@ -7,13 +7,13 @@ import { MORGAN_FORMAT } from "./libs/config";
 
 import session from "express-session";
 import ConnectMongoDB from "connect-mongodb-session";
+import { T } from "./libs/types/common";
 
 const MongoDBStore = ConnectMongoDB(session);
 const store = new MongoDBStore({
   uri: String(process.env.MONGO_URL),
   collection: "sportifySessions",
 });
-
 
 /** ENTRANCE **/
 const app = express();
@@ -23,16 +23,22 @@ app.use(express.json());
 app.use(morgan(MORGAN_FORMAT));
 
 app.use(
-    session({
-      secret: String(process.env.SESSION_SECRET),
-      cookie: {
-        maxAge: 1000 * 3600 * 3, // 3h
-      },
-      store: store,
-      resave: true,
-      saveUninitialized: true,
-    })
-  );
+  session({
+    secret: String(process.env.SESSION_SECRET),
+    cookie: {
+      maxAge: 1000 * 3600 * 3, // 3h
+    },
+    store: store,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+app.use(function (req, res, next) {
+  const sessionInstance = req.session as T;
+  res.locals.user = sessionInstance.user;
+  next();
+});
 
 /** VIEWS**/
 app.set("views", path.join(__dirname, "views"));

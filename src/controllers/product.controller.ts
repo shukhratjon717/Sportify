@@ -6,6 +6,7 @@ import ProductService from "../mdels/Product.service";
 const productService = new ProductService();
 
 const productController: T = {};
+
 productController.getAllProducts = async (req: Request, res: Response) => {
   try {
     console.log("getAllProducts");

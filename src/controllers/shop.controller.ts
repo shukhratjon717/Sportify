@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { T } from "../libs/types/common";
 import UserService from "../mdels/User.service";
 import { AdminRequest, LoginInput, UserInput } from "../libs/types/user";
@@ -104,6 +104,22 @@ shopController.checkAuthSession = async (req: AdminRequest, res: Response) => {
   } catch (err) {
     console.log("Error, checkAuthSession:", err);
     res.send(err);
+  }
+};
+
+shopController.verifyShop = (
+  req: AdminRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.session?.user?.userType === UserType.SHOP) {
+    req.user = req.session.user;
+    next();
+  } else {
+    const message = Message.NOT_AUTHENTICATED;
+    res.send(
+      `<script> alert("${message}"); window.location.replace("/admin/login") </script>`
+    );
   }
 };
 
