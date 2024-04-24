@@ -15,6 +15,7 @@ shopController.goHome = (req: Request, res: Response) => {
     // send \ json \ redirect\ end \ render
   } catch (err) {
     console.log("Error, GoHome", err);
+    res.redirect("/admin");
   }
 };
 
@@ -24,6 +25,7 @@ shopController.getSignup = (req: Request, res: Response) => {
     res.render("signup");
   } catch (err) {
     console.log("Error, getSignup", err);
+    res.redirect("/admin");
   }
 };
 
@@ -33,6 +35,7 @@ shopController.getLogin = (req: Request, res: Response) => {
     res.render("login");
   } catch (err) {
     console.log("Error, getLogin", err);
+    res.redirect("/admin");
   }
 };
 
@@ -51,7 +54,11 @@ shopController.processSignup = async (req: AdminRequest, res: Response) => {
     });
   } catch (err) {
     console.log("Error, processSignup", err);
-    res.send(err);
+    const message =
+      err instanceof Errors ? err.message : Message.SOEMTHING_WENT_WRONG;
+    res.send(
+      `<script> alert("${message}); window.location.replace('/admin/logout) </script>`
+    );
   }
 };
 
@@ -68,14 +75,27 @@ shopController.processLogin = async (req: AdminRequest, res: Response) => {
     });
   } catch (err) {
     console.log("Error, processLogin", err);
-    res.send(err);
-  };
-}
+    const message =
+      err instanceof Errors ? err.message : Message.SOEMTHING_WENT_WRONG;
+    res.send(
+      `<script> alert("${message}); window.location.replace('/admin/login) </script>`
+    );
+  }
+};
 
-shopController.checkAuthSession = async (
-  req: AdminRequest,
-  res: Response
-) => {
+shopController.logout = async (req: AdminRequest, res: Response) => {
+  try {
+    console.log("logout");
+    req.session.destroy(function () {
+      res.redirect("/admin");
+    });
+  } catch (err) {
+    console.log("Error, logout", err);
+    res.redirect("/admin");
+  }
+};
+
+shopController.checkAuthSession = async (req: AdminRequest, res: Response) => {
   try {
     console.log("checkAuthSession");
     if (req.session?.user)
@@ -86,7 +106,5 @@ shopController.checkAuthSession = async (
     res.send(err);
   }
 };
-
-
 
 export default shopController;
