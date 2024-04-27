@@ -25,7 +25,7 @@ shopController.getSignup = (req: Request, res: Response) => {
     res.render("signup");
   } catch (err) {
     console.log("Error, getSignup", err);
-    res.redirect("/admin");
+    res.redirect("/admin/signup");
   }
 };
 
@@ -35,7 +35,7 @@ shopController.getLogin = (req: Request, res: Response) => {
     res.render("login");
   } catch (err) {
     console.log("Error, getLogin", err);
-    res.redirect("/admin");
+    res.redirect("/admin/login");
   }
 };
 
@@ -45,15 +45,17 @@ shopController.processSignup = async (req: AdminRequest, res: Response) => {
 
     const newUser: UserInput = req.body;
     newUser.userType = UserType.SHOP;
+
     const result = await userService.processSignup(newUser);
     // TODO: SESSIONS AUTHENTICATION
 
     req.session.user = result;
+
     req.session.save(function () {
       res.send(result);
     });
   } catch (err) {
-    console.log("Error, processSignup", err);
+    console.log("Error, processSignup:1", err);
     const message =
       err instanceof Errors ? err.message : Message.SOEMTHING_WENT_WRONG;
     res.send(

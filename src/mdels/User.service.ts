@@ -6,6 +6,7 @@ import * as bcrypt from "bcryptjs";
 
 class UserService {
   private readonly userModel;
+  static SHOP: UserType | undefined;
 
   constructor() {
     this.userModel = UserModel;
@@ -47,10 +48,8 @@ class UserService {
       .exec();
     if (exist) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
 
-    console.log("before:", input.userPassword);
     const salt = await bcrypt.genSalt();
     input.userPassword = await bcrypt.hash(input.userPassword, salt);
-    console.log("after:", input.userPassword);
 
     try {
       const result = await this.userModel.create(input);
