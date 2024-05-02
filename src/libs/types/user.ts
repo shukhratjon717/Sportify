@@ -38,4 +38,7 @@ export interface LoginInput {
 export interface AdminRequest extends Request {
   user: User;
   session: Session & { user: User };
+  file: Express.Multer.File;
+  files: Express.Multer.File[];
+
 }
