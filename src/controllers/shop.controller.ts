@@ -43,10 +43,11 @@ shopController.processSignup = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processSignup");
     const file = req.file;
-    if(!file) throw new Errors(HttpCode.BAD_REQUEST, Message.SOEMTHING_WENT_WRONG)
+    if (!file)
+      throw new Errors(HttpCode.BAD_REQUEST, Message.SOEMTHING_WENT_WRONG);
 
     const newUser: UserInput = req.body;
-    newUser.userImage = file?.path;
+    newUser.userImage = file?.path.replace(/\\/g, "/");
     newUser.userType = UserType.SHOP;
     const result = await userService.processSignup(newUser);
     // TODO: SESSIONS AUTHENTICATION
@@ -77,7 +78,7 @@ shopController.processLogin = async (req: AdminRequest, res: Response) => {
     req.session.user = result;
     req.session.save(function () {
       // res.send(result);
-      res.redirect("/admin/product/all")
+      res.redirect("/admin/product/all");
     });
   } catch (err) {
     console.log("Error, processLogin", err);
@@ -97,6 +98,26 @@ shopController.logout = async (req: AdminRequest, res: Response) => {
     });
   } catch (err) {
     console.log("Error, logout", err);
+    res.redirect("/admin");
+  }
+};
+
+shopController.getUsers = async (req: Request, res: Response) => {
+  try {
+    console.log("getUsers");
+    const result = await userService.getUsers();
+    console.log("result:", result);
+  } catch (err) {
+    console.log("Error: getUsers:", err);
+    res.redirect("/admin/login");
+  }
+};
+
+shopController.updateChosenUser = (req: Request, res: Response) => {
+  try {
+    console.log("updatechosenUser");
+  } catch (err) {
+    console.log("Error, updateChosenUser:", err);
     res.redirect("/admin");
   }
 };

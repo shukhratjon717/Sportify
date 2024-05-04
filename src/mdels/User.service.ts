@@ -76,7 +76,14 @@ class UserService {
     return await this.userModel.findById(user._id).exec();
   }
 
- 
-};
+  public async getUsers(): Promise<User[]> {
+    const result = await this.userModel
+      .find({ userType: UserType.USER })
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+    return result;
+  }
+}
 
 export default UserService;

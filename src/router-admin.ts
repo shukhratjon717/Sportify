@@ -37,10 +37,15 @@ routerAdmin.post(
   productController.updateChosenProduct
 );
 
+routerAdmin.get(
+  "/user/all",
+  shopController.verifyShop,
+  shopController.getUsers
+);
+
 /** User */
 
 export default routerAdmin;
-
 
 // restaurantController.processSignup = async (
 //   req: AdminRequest,
@@ -67,7 +72,6 @@ export default routerAdmin;
 //     );
 //   }
 // };
-
 
 // public async processSignup(input: MemberInput): Promise<Member> {
 //   const exist = await this.memberModel
