@@ -1,8 +1,9 @@
 import UserModel from "../schema/User.model";
-import { LoginInput, User, UserInput } from "../libs/types/user";
+import { LoginInput, User, UserInput, UserUpdateInput } from "../libs/types/user";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { UserType } from "../libs/enums/user.enum";
 import * as bcrypt from "bcryptjs";
+import { shapeIntoMongooseObjectId } from "../libs/config";
 
 class UserService {
   private readonly userModel;
@@ -82,6 +83,15 @@ class UserService {
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
+    return result;
+  }
+
+  public async updateChosenUser(input: UserUpdateInput): Promise<User> {
+    input._id = shapeIntoMongooseObjectId(input._id);
+    const result = await this.userModel
+      .findByIdAndUpdate({ _id: input._id }, input, { new: true })
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
     return result;
   }
 }

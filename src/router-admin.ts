@@ -37,13 +37,17 @@ routerAdmin.post(
   productController.updateChosenProduct
 );
 
+/** User */
 routerAdmin.get(
   "/user/all",
   shopController.verifyShop,
   shopController.getUsers
 );
-
-/** User */
+routerAdmin.post(
+  "/user/edit",
+  shopController.verifyShop,
+  shopController.updateChosenUser
+);
 
 export default routerAdmin;
 
