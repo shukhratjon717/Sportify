@@ -42,6 +42,7 @@ shopController.getLogin = (req: Request, res: Response) => {
 shopController.processSignup = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processSignup");
+    console.log("req,.Body:", req.body);
     const file = req.file;
     if (!file)
       throw new Errors(HttpCode.BAD_REQUEST, Message.SOEMTHING_WENT_WRONG);
@@ -63,7 +64,7 @@ shopController.processSignup = async (req: AdminRequest, res: Response) => {
     const message =
       err instanceof Errors ? err.message : Message.SOEMTHING_WENT_WRONG;
     res.send(
-      `<script> alert("${message}); window.location.replace('/admin/logout) </script>`
+      `<script> alert("${message}); window.location.replace('/admin/signup) </script>`
     );
   }
 };
@@ -106,7 +107,6 @@ shopController.getUsers = async (req: Request, res: Response) => {
   try {
     console.log("getUsers");
     const result = await userService.getUsers();
-    console.log("result:", result);
   } catch (err) {
     console.log("Error: getUsers:", err);
     res.redirect("/admin/login");
