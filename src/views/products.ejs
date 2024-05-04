@@ -37,7 +37,6 @@
                 <th scope="col">T/r</th>
                 <th scope="col">Product Name</th>
                 <th scope="col">Product Type</th>
-                <!-- <th scope="col">Product Shoes s</th> -->
                 <th scope="col">Product Price</th>
                 <th scope="col">Product Left Count</th>
                 <th scope="col">Status</th>
@@ -49,12 +48,7 @@
               <td><%= key + 1%></td>
               <td><%= value.productName%></td>
               <td><%= value.productCollection%></td>
-              <td>
-                <%= value.productCollection === 'MAN' || "WOMAN" ? value.productSize :
-                value.productSize%>
-              </td>
-              <td> <%= value.productCollection === "CHILDREN" ? value.productChildSize :
-                 value.productSize  %></td>
+             
               <td><%= value.productPrice%></td>
               <td><%= value.productLeftCount%></td>
               <td>
@@ -62,9 +56,9 @@
                   class="spec-select new-product-status"
                   id="<%= value._id%>"
                 >
-                  <option value="PAUSE" <%= value.productStatus === "PAUSE" ? "selected" : "" %> >PAUSE</option>
-                  <option value="PROCESS" <%= value.productStatus === "PROCESS" ? "selected" : "" %> >PROCESS</option>
-                  <option value="DELETE" <%= value.productStatus === "DELETE" ? "selected" : "" %> >DELETE</option>
+                  <option value="PAUSE" <%= value.productStatus === "PAUSE" ? "selected" : "" %>>PAUSE</option>
+                  <option value="PROCESS" <%= value.productStatus === "PROCESS" ? "selected" : "" %>>PROCESS </option>
+                  <option value="DELETE" <%= value.productStatus === "DELETE" ? "selected" : "" %>>DELETE </option>
                 </select>
               </td>
             </tbody>
@@ -81,6 +75,7 @@
           </div>
         </div>
         <form
+        onsubmit="return validateForm()"
           action="/admin/product/create"
           method="POST"
           class="dish-container"
@@ -126,31 +121,46 @@
               />
             </div>
           </div>
+          
+          <div class="half-input" id="product">
+           
+            <label>User Type</label>
+                <select class="product-type" name="productSize">
+                <option value="MAN" selected >Man</option>
+                <option value="WOMAN" >Woman</option>
+                <option value="CHILDREN">Children</option>
+                <option value="UNISEX">Unisex</option>
+              </select>
+
+           
+          </div>
+         
           <div class="half-input-frame">
-            <div class="half-input">
-              <label>Product Type</label>
-              <select class="product-collection" name="productCollection">
-                <option value="DISH" >T-shirt</option>
-                <option value="DESSERT">Coats</option>
-                <option value="DRINK">Jackets</option>
-                <option value="SALAD">Shoes</option>
-                <option value="OTHER" selected>Set</option>
+            <div class="half-input" id="product-collection">
+              <label>User Type</label>
+                <select class="product-type" name="productSize">
+                  <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="Xl">XL</option>
+                <option value="XXL">XXL</option>
               </select>
             </div>
 
-            <div class="half-input" id="product-collection">
-              <label>User Type</label>
-              <select class="product-size" name="productSize">
-                <option value="SMALL" selected >Man</option>
-                <option value="NORMAL" >Woman</option>
-                <option value="LARGE">Children</option>
-                <option value="SET">Unisex</option>
+            <div class="half-input" id="product">
+              <label>Product Collection </label>
+              <select class="product-collection" name="productCollection">
+                <option value="T-SHIRT" >T-shirt</option>
+                <option value="COATS">Coats</option>
+                <option value="JACKETS">Jackets</option>
+                <option value="SHOES">Shoes</option>
+                <option value="SET" selected>Set</option>
               </select>
             </div>
 
             <div class="half-input" id="product-volume" style="display: none">
               <label>Shoes Size</label>
-              <select class="product-volume" name="productVolume">
+              <select class="product-shoes-size" name="productShoesSize">
                 <option value="230">230</option>
                 <option value="235">235</option>
                 <option value="240">240</option>
@@ -165,14 +175,24 @@
               </select>
             </div>
             
-            <div class="half-input" id="product-volume" style="display: none">
+            <div class="half-input" id="child-size" style="display: none">
               <label>Children Size</label>
-              <select class="product-volume" name="productVolume">
+              <select class="product-child-size" name="productChildSize">
                 <option value="2_T">2-T</option>
                 <option value="3_T">3-T</option>
                 <option value="4_T">4-T</option>
                 <option value="5_T">5-T</option>
-              
+              </select>
+            </div>
+
+            <div class="half-input" id="product-volume" style="display: none">
+              <label>Product Size</label>
+              <select class="product-size" name="productSize">
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="Xl">XL</option>
+                <option value="XXL">XXL</option>
               </select>
             </div>
           </div>
@@ -192,6 +212,7 @@
                   name="productImages"
                   class="image-one"
                   required
+                  onchange="previewFileHandler(this, 1)"
                 />
               </div>
               <div class="upload-img-box">
@@ -201,6 +222,8 @@
                   id="file"
                   name="productImages"
                   class="image-two"
+                  onchange="previewFileHandler(this, 2)"
+
                 />
               </div>
               <div class="upload-img-box">
@@ -210,6 +233,8 @@
                   id="file"
                   name="productImages"
                   class="image-three"
+                  onchange="previewFileHandler(this, 3)"
+
                 />
               </div>
               <div class="upload-img-box">
@@ -219,6 +244,8 @@
                   id="file"
                   name="productImages"
                   class="image-four"
+                  onchange="previewFileHandler(this, 4)"
+
                 />
               </div>
               <div class="upload-img-box">
@@ -228,6 +255,8 @@
                   id="file"
                   name="productImages"
                   class="image-five"
+                  onchange="previewFileHandler(this, 5)"
+
                 />
               </div>
               <input name="restaurantIid" class="restaurant-id" hidden />

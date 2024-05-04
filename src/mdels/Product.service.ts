@@ -19,13 +19,14 @@ class ProductService {
   public async getAllProducts(): Promise<Product[]> {
     // string => ObjecTId
     const result = await this.productModel.find().exec();
-    if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-    
-    return result
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+    return result;
   }
 
   public async createNewProduct(input: ProductInput): Promise<Product> {
     try {
+      console.log("hello world");
       return await this.productModel.create(input);
     } catch (err) {
       console.log("Error of Database, model: createNewProduct:", err);
