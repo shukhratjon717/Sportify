@@ -35,14 +35,14 @@ shopController.getLogin = (req: Request, res: Response) => {
     res.render("login");
   } catch (err) {
     console.log("Error, getLogin", err);
-    res.redirect("/admin/login");
+    res.redirect("/admin/product/all");
   }
 };
 
 shopController.processSignup = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processSignup");
-    console.log("req,.Body:", req.body);
+    console.log("req.Body:", req.body);
     const file = req.file;
     if (!file)
       throw new Errors(HttpCode.BAD_REQUEST, Message.SOEMTHING_WENT_WRONG);
@@ -56,15 +56,15 @@ shopController.processSignup = async (req: AdminRequest, res: Response) => {
     req.session.user = result;
 
     req.session.save(function () {
-      res.send(result);
-      res.redirect(".admin/product/all");
+      // res.send(result);
+      res.redirect("/admin/product/all");
     });
   } catch (err) {
     console.log("Error, processSignup:1", err);
     const message =
       err instanceof Errors ? err.message : Message.SOEMTHING_WENT_WRONG;
     res.send(
-      `<script> alert("${message}); window.location.replace('/admin/signup) </script>`
+      `<script> alert("${message}"); window.location.replace('/admin/signup') </script>`
     );
   }
 };
@@ -72,13 +72,14 @@ shopController.processSignup = async (req: AdminRequest, res: Response) => {
 shopController.processLogin = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processLogin");
+    // console.log("Forced Stop", req.body);
+    // throw new Error("Forced Stop");
 
     const input: LoginInput = req.body;
     const result = await userService.processLogin(input);
     // TODO: SESSIONS AUTHENTICATION
     req.session.user = result;
     req.session.save(function () {
-      // res.send(result);
       res.redirect("/admin/product/all");
     });
   } catch (err) {
@@ -86,7 +87,7 @@ shopController.processLogin = async (req: AdminRequest, res: Response) => {
     const message =
       err instanceof Errors ? err.message : Message.SOEMTHING_WENT_WRONG;
     res.send(
-      `<script> alert("${message}); window.location.replace('/admin/login) </script>`
+      `<script> alert("${message}"); window.location.replace('/admin/login') </script>`
     );
   }
 };

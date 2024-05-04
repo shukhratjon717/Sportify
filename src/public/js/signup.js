@@ -7,8 +7,8 @@ $(function () {
     if (window.FileReader) {
       const uploadFile = $(this)[0].files[0];
       const fileType = uploadFile["type"];
-      const valiImageType = ["image/jpg", "image/jpeg", "image/png"];
-      if (!valiImageType.includes(fileType)) {
+      const validImageType = ["image/jpg", "image/jpeg", "image/png"];
+      if (!validImageType.includes(fileType)) {
         alert("Pease insert only jpeg, jpg, png!");
       } else {
         if (uploadFile) {
@@ -24,32 +24,32 @@ $(function () {
   });
 });
 
-function validatesignupForm() {
+function validateSignupForm() {
   const userNick = $(".user-nick").val();
   const userPhone = $(".user-phone").val();
-  const userPasswod = $(".user-password").val();
-  const confirmPassword = $(".confirm-passwod").val();
-}
+  const userPassword = $(".user-password").val();
+  const confirmPassword = $(".confirm-password").val();
 
-if (
-  userNick === "" ||
-  userPhone === "" ||
-  userPasswod === "" ||
-  confirmPassword === ""
-) {
-  alert("Please insert all required inputs");
-  return false;
-}
+  if (
+    userNick === "" ||
+    userPhone === "" ||
+    userPassword === "" ||
+    confirmPassword === ""
+  ) {
+    alert("Please insert all required inputs");
+    return false;
+  }
 
-if (userPasswod !== confirmPassword) {
-  alert("Password is different please check!");
-  return false;
-}
+  if (userPassword !== confirmPassword) {
+    alert("Password is different please check!");
+    return false;
+  }
 
-const userImage = $(".user-image").get(0).files[0]
-  ? $(".user-image").get(0).files[0].name
-  : mull;
-if (!userImage) {
-  alert("Please insert shop image!");
-  return false;
+  const userImage = $(".user-image").get(0).files[0]
+    ? $(".user-image").get(0).files[0].name
+    : mull;
+  if (!userImage) {
+    alert("Please insert shop image!");
+    return false
+  }
 }

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { ProductSize } from "../libs/enums/product.enum";
-import { ProductSize2 } from "../libs/enums/product.enum";
+import { ProductChildSize, ProductSize } from "../libs/enums/product.enum";
+import { ProductShoesSize } from "../libs/enums/product.enum";
 import { ProductCollection } from "../libs/enums/product.enum";
 import { ProductStatus } from "../libs/enums/product.enum";
 
@@ -35,10 +35,15 @@ const productSchema = new Schema(
       enum: ProductSize,
       default: ProductSize.M,
     },
-    productSize2: {
+    productShoesSize: {
       type: Number,
-      enum: ProductSize2,
-      default: ProductSize2.TWO_SEVEN_ZERO,
+      enum: ProductShoesSize,
+      default: ProductShoesSize.TWO_SEVEN_ZERO,
+    },
+    ProductChildSize: {
+      type: String,
+      enum: ProductChildSize,
+      default: ProductChildSize.THREE_T,
     },
 
     productDesc: {
@@ -47,7 +52,7 @@ const productSchema = new Schema(
     },
     productImage: {
       type: [String],
-    default: [],
+      default: [],
     },
 
     productViews: {
@@ -63,4 +68,4 @@ productSchema.index(
   { unique: true }
 );
 
-export default mongoose.model("Product", productSchema)
+export default mongoose.model("Product", productSchema);

@@ -6,7 +6,7 @@ export enum ProductSize {
   XXL = "XXL",
 }
 
-export enum ProductSize2 {
+export enum ProductShoesSize {
   TWO_THREE_ZERO = 230,
   TWO_THREE_FIVE = 235,
   TWO_FOUR_ZERO = 240,
@@ -18,6 +18,13 @@ export enum ProductSize2 {
   TWO_SEVEN_ZERO = 270,
   TWO_SEVEN_FIVE = 275,
   TWO_EIGHT_ZERO = 280,
+}
+
+export enum ProductChildSize {
+  TWO_T = "2T",
+  THREE_T = "3T",
+  FOUR_T = "4T",
+  FIVE_T = "5T",
 }
 
 export enum ProductStatus {
