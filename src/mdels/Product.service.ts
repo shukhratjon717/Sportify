@@ -16,6 +16,14 @@ class ProductService {
   /** SPA Finisher */
 
   /** SSR Starter */
+  public async getAllProducts(): Promise<Product[]> {
+    // string => ObjecTId
+    const result = await this.productModel.find().exec();
+    if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    
+    return result
+  }
+
   public async createNewProduct(input: ProductInput): Promise<Product> {
     try {
       return await this.productModel.create(input);
@@ -35,7 +43,6 @@ class ProductService {
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 
-    console.log("result:", result);
     return result;
   }
 
