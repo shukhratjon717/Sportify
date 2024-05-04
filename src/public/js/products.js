@@ -5,10 +5,23 @@ $(function () {
     const selectedValue = $(".product-type").val();
     if (selectedValue === "CHILDREN") {
       $("#child-size").show();
-      $("#product-collection").hide();
-    } else {
       $("#product-collection").show();
+      $("#adult-size").hide();
+    } else {
       $("#child-size").hide();
+      $("#adult-size").show();
+    }
+  });
+
+  $("#product1").on("change", () => {
+    const selectedValue = $(".product-collection").val();
+    if (selectedValue === "SHOES") {
+      $("#shoes-size").show();
+      $("#adult-size").hide();
+    } else {
+      $("#child-size").hide();
+      $("#shoes-size").hide();
+      $("#adult-size").show();
     }
   });
 
