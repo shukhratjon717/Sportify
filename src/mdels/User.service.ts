@@ -1,7 +1,12 @@
 import UserModel from "../schema/User.model";
-import { LoginInput, User, UserInput, UserUpdateInput } from "../libs/types/user";
+import {
+  LoginInput,
+  User,
+  UserInput,
+  UserUpdateInput,
+} from "../libs/types/user";
 import Errors, { HttpCode, Message } from "../libs/Errors";
-import { UserType } from "../libs/enums/user.enum";
+import { UserStatus, UserType } from "../libs/enums/user.enum";
 import * as bcrypt from "bcryptjs";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 
@@ -30,9 +35,19 @@ class UserService {
 
   public async login(input: LoginInput): Promise<User> {
     const user = await this.userModel
-      .findOne({ userNick: input.userNick }, { userNick: 1, userPassword: 1 })
+      .findOne(
+        { userNick: input.userNick, userStatus: { $ne: UserStatus.DELETE } },
+        { userNick: 1, userPassword: 1 }
+      )
       .exec();
+
     if (!user) throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
+    else if (user.userStatus === UserStatus.BLOCK) {
+      throw new Errors(HttpCode.FORBIDDEN, Message.BLOCKED_USER);
+    }
+
+    console.log("user:", user);
+
     const isMatch = await bcrypt.compare(input.userPassword, user.userPassword);
 
     if (!isMatch) {
