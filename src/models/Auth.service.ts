@@ -1,10 +1,10 @@
+import { User } from "../libs/types/user";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { AUTH_TIMER } from "../libs/config";
-import { User } from "../libs/types/user";
 import jwt from "jsonwebtoken";
+
 class AuthService {
   private readonly secretToken;
-
   constructor() {
     this.secretToken = process.env.SECRET_TOKEN as string;
   }
@@ -31,7 +31,7 @@ class AuthService {
 
   public async checkAuth(token: string): Promise<User> {
     const result: User = (await jwt.verify(token, this.secretToken)) as User;
-    console.log(`----[SUTH] userNick: ${result.userNick}`);
+    console.log(`----[SUTH] memberNick: ${result.userNick} ---`);
     return result;
   }
 }

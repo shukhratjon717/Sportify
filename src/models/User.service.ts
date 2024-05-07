@@ -19,6 +19,18 @@ class UserService {
   }
 
   /**SPA */
+
+  public async getRestaurant(): Promise<User> {
+    const result = await this.userModel
+      .findOne({ userType: UserType.SHOP })
+      .lean()
+      .exec();
+    result.target = "Welcome to the Sportify shop ";
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    return result;
+  }
+
+  
   public async signup(input: UserInput): Promise<User> {
     const salt = await bcrypt.genSalt();
     input.userPassword = await bcrypt.hash(input.userPassword, salt);
@@ -136,7 +148,7 @@ class UserService {
   public async updateChosenUser(input: UserUpdateInput): Promise<User> {
     input._id = shapeIntoMongooseObjectId(input._id);
     const result = await this.userModel
-      .findByIdAndUpdate(input._id , input, { new: true })
+      .findByIdAndUpdate(input._id, input, { new: true })
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
     return result;
@@ -144,3 +156,4 @@ class UserService {
 }
 
 export default UserService;
+

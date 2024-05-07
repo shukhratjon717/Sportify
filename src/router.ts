@@ -1,12 +1,13 @@
 import express from "express";
 const router = express.Router();
-import userController from "./controllers/user.controller";
 import uploader from "./libs/utils/uploader";
 import productController from "./controllers/product.controller";
+import userController from "./controllers/user.controller";
 
+router.get("/user/restaurant", userController.getRestaurant);
 router.post("/user/login", userController.login);
-router.post("/user/login", userController.login);
-router.post("/user/detail", userController.verifyAuth);
+router.post("/user/signup", userController.signup);
+router.post("/user/logout", userController.verifyAuth, userController.logout);
 
 router.get(
   "/user/detail",
@@ -23,7 +24,12 @@ router.post(
 router.get("/user/top-users", userController.getTopUsers);
 
 /** Product */
-router.get("/product/all", productController.getProducts)
+router.get("/product/all", productController.getProducts);
+router.get(
+  "/product/:id",
+  // userController.retrieveAuth,
+  productController.getProduct
+);
 
 /** Order */
 
