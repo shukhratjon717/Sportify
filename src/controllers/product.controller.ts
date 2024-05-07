@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { T } from "../libs/types/common";
-import ProductService from "../mdels/Product.service";
+import ProductService from "../models/Product.service";
 import { AdminRequest } from "../libs/types/user";
 import { ProductInput } from "../libs/types/product";
 
@@ -19,8 +19,8 @@ productController.getAllProducts = async (req: Request, res: Response) => {
     console.log("getAllProducts");
     const data = await productService.getAllProducts();
 
-    console.log("products:", data); 
-    
+    console.log("products:", data);
+
     res.render("products", { products: data });
   } catch (err) {
     console.log("Error, getAllProducts", err);

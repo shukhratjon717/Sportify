@@ -1,11 +1,13 @@
 import express, { Request, Response } from "express";
 import { T } from "../libs/types/common";
 import { LoginInput, User, UserInput } from "../libs/types/user";
-import UserService from "../mdels/User.service";
+import UserService from "../models/User.service";
 import Errors from "../libs/Errors";
 import moment from "moment";
+import AuthService from "../models/Auth.service";
 
 const userService = new UserService();
+const authService = new AuthService();
 
 const userController: T = {};
 userController.signup = async (req: Request, res: Response) => {
@@ -14,12 +16,14 @@ userController.signup = async (req: Request, res: Response) => {
 
     const input: UserInput = req.body,
       result: User = await userService.signup(input);
+    const token = await authService.createToken(result);
     // TODO: tokens
     console.log(
       `${input.userNick} is registered as a new user at ${moment().format(
         "YYYY-MM-DD HH:MM:ss"
       )}`
     );
+    console.log("token=>", token);
 
     res.json({ user: result });
   } catch (err) {
@@ -33,7 +37,9 @@ userController.login = async (req: Request, res: Response) => {
   try {
     console.log("login");
     const input: LoginInput = req.body,
-      result = await userService.login(input);
+      result = await userService.login(input),
+      token = await authService.createToken(result);
+
     // TODO: tokens
 
     console.log(
@@ -41,6 +47,7 @@ userController.login = async (req: Request, res: Response) => {
         "YYYY-MM-DD HH:MM:ss"
       )}`
     );
+    console.log("token=>", token)
 
     res.json({ user: result });
   } catch (err) {
