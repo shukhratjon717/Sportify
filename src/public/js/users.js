@@ -2,11 +2,8 @@ console.log("Users frontend javascript file");
 
 $(function () {
   $(".user-status").on("change", function (e) {
-    const id = e.target.id;
-    console.log("id:", id);
-
-    const userStatus = $(`#${id}.user-status`).val();
-    console.log("userStatus:", userStatus);
+    const id = e.target.id,
+      userStatus = $(`#${id}.user-status`).val();
 
     // TODO: Axios updateChosenUser   // rest API
     axios
@@ -17,10 +14,8 @@ $(function () {
       .then((response) => {
         console.log("response:", response);
         const result = response.data;
-        console.log("result:", result);
 
         if (result.data) {
-          console.log("User updated!");
           $(".user-status").blur();
         } else alert("User update failed!");
       })

@@ -45,11 +45,11 @@ function validateSignupForm() {
     return false;
   }
 
-  const userImage = $(".user-image").get(0).files[0]
+  const userImage = $(".user-image").get(0).files[0]?.name
     ? $(".user-image").get(0).files[0].name
     : mull;
   if (!userImage) {
     alert("Please insert shop image!");
-    return false
+    return false;
   }
 }
