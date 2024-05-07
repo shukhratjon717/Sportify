@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { T } from "../libs/types/common";
 import { LoginInput, User, UserInput } from "../libs/types/user";
 import UserService from "../models/User.service";
-import Errors, { HttpCode } from "../libs/Errors";
+import Errors, { HttpCode, Message } from "../libs/Errors";
 import moment from "moment";
 import AuthService from "../models/Auth.service";
 import { AUTH_TIMER } from "../libs/config";
@@ -60,6 +60,21 @@ userController.login = async (req: Request, res: Response) => {
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }
+  userController.verifyAuth = async (req: Request, res: Response) => {
+    try {
+      let user = null;
+      const token = req.cookies["accessToken"];
+      if (token) user = await authService.checkAuth(token);
+      if (!user)
+        throw new Errors(HttpCode.UNAUTHORIZED, Message.NOT_AUTHENTICATED);
+      console.log("user:", user);
+      res.status(HttpCode.OK).json({ user: user });
+    } catch (err) {
+      console.log("Error, verifyAuth", err);
+      if (err instanceof Errors) res.status(err.code).json(err);
+      else res.status(Errors.standard.code).json(Errors.standard);
+    }
+  };
 };
 
 export default userController;
