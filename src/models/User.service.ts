@@ -46,8 +46,6 @@ class UserService {
       throw new Errors(HttpCode.FORBIDDEN, Message.BLOCKED_USER);
     }
 
-    console.log("user:", user);
-
     const isMatch = await bcrypt.compare(input.userPassword, user.userPassword);
 
     if (!isMatch) {

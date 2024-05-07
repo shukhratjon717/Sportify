@@ -2,9 +2,10 @@ import express, { Request, Response } from "express";
 import { T } from "../libs/types/common";
 import { LoginInput, User, UserInput } from "../libs/types/user";
 import UserService from "../models/User.service";
-import Errors from "../libs/Errors";
+import Errors, { HttpCode } from "../libs/Errors";
 import moment from "moment";
 import AuthService from "../models/Auth.service";
+import { AUTH_TIMER } from "../libs/config";
 
 const userService = new UserService();
 const authService = new AuthService();
@@ -23,9 +24,12 @@ userController.signup = async (req: Request, res: Response) => {
         "YYYY-MM-DD HH:MM:ss"
       )}`
     );
-    console.log("token=>", token);
+    res.cookie("accessToken", token, {
+      maxAge: AUTH_TIMER * 3600 * 1000,
+      httpOnly: false,
+    });
 
-    res.json({ user: result });
+    res.status(HttpCode.CREATED).json({ user: result });
   } catch (err) {
     console.log("Error, signup", err);
     if (err instanceof Errors) res.status(err.code).json(err);
@@ -40,16 +44,17 @@ userController.login = async (req: Request, res: Response) => {
       result = await userService.login(input),
       token = await authService.createToken(result);
 
-    // TODO: tokens
-
     console.log(
       `${input.userNick} is logged in at ${moment().format(
         "YYYY-MM-DD HH:MM:ss"
       )}`
     );
-    console.log("token=>", token)
+    res.cookie("accessToken", token, {
+      maxAge: AUTH_TIMER * 3600 * 1000,
+      httpOnly: false,
+    });
 
-    res.json({ user: result });
+    res.status(HttpCode.CREATED).json({ user: result, accessToken: token });
   } catch (err) {
     console.log("Error, login", err);
     if (err instanceof Errors) res.status(err.code).json(err);
