@@ -74,6 +74,20 @@ class UserService {
     return result;
   }
 
+  public async getTopUsers(): Promise<User[]> {
+    const result = await this.userModel
+      .find({
+        userStatus: UserStatus.ACTIVE,
+        userPoint: { $gte: 1 },
+      })
+      .sort({ userPoints: -1 })
+      .limit(4)
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+    return result;
+  }
+
   /**BSSR */
 
   public async processSignup(input: UserInput): Promise<User> {

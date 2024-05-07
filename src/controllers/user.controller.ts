@@ -109,6 +109,20 @@ userController.login = async (req: Request, res: Response) => {
       else res.status(Errors.standard.code).json(Errors.standard);
     }
   }
+
+  userController.getTopUsers = async (req: Request, res: Response) => {
+    try {
+      console.log("getTopUsers")
+      const result = await userService.getTopUsers()
+
+      res.status(HttpCode.OK).json(result)
+    } catch (err) {
+      console.log("Error, getTopUsers:", err);
+      if (err instanceof Errors) res.status(err.code).json(err);
+      else res.status(Errors.standard.code).json(Errors.standard);
+    }
+  }
+
   userController.verifyAuth = async (req: Request, res: Response) => {
     try {
       let user = null;
