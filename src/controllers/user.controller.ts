@@ -5,6 +5,7 @@ import {
   LoginInput,
   User,
   UserInput,
+  UserUpdateInput,
 } from "../libs/types/user";
 import UserService from "../models/User.service";
 import Errors, { HttpCode, Message } from "../libs/Errors";
@@ -93,6 +94,21 @@ userController.login = async (req: Request, res: Response) => {
       else res.status(Errors.standard.code).json(Errors.standard);
     }
   };
+
+  userController.updateUser = async(req: ExtendedRequest, res:Response) => {
+    try {
+      console.log("updateMember");
+      const input: UserUpdateInput = req.body;
+      if (req.file) input.userImage = req.file.path.replace(/\\/, "/");
+      const result = await userService.updateUser(req.user, input);
+  
+      res.status(HttpCode.OK).json(result);
+    } catch (err) {
+      console.log("Error, updateUser:", err);
+      if (err instanceof Errors) res.status(err.code).json(err);
+      else res.status(Errors.standard.code).json(Errors.standard);
+    }
+  }
   userController.verifyAuth = async (req: Request, res: Response) => {
     try {
       let user = null;

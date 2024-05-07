@@ -64,6 +64,16 @@ class UserService {
     return result;
   }
 
+  public async updateUser(user: User, input: UserUpdateInput): Promise<User> {
+    const userId = shapeIntoMongooseObjectId(user._id);
+    const result = await this.userModel
+      .findByIdAndUpdate({ _id: userId }, input, { new: true })
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+
+    return result;
+  }
+
   /**BSSR */
 
   public async processSignup(input: UserInput): Promise<User> {

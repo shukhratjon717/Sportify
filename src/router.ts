@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import userController from "./controllers/user.controller";
+import uploader from "./libs/utils/uploader";
 
 router.post("/user/login", userController.login);
 router.post("/user/login", userController.login);
@@ -10,6 +11,13 @@ router.get(
   "/user/detail",
   userController.verifyAuth,
   userController.getUserDetail
+);
+
+router.post(
+  "/user/update",
+  userController.verifyAuth,
+  uploader("members").single("userImage"),
+  userController.updateUser
 );
 
 /** Product */
