@@ -136,7 +136,7 @@ class UserService {
   public async updateChosenUser(input: UserUpdateInput): Promise<User> {
     input._id = shapeIntoMongooseObjectId(input._id);
     const result = await this.userModel
-      .findByIdAndUpdate({ _id: input._id }, input, { new: true })
+      .findByIdAndUpdate(input._id , input, { new: true })
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
     return result;
