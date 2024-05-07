@@ -45,6 +45,13 @@ export interface UserUpdateInput {
   userDesc?: string;
   userImage?: string;
 }
+
+export interface ExtendedRequest extends Request {
+  user: User;
+  session: Session & { user: User };
+  file: Express.Multer.File;
+  files: Express.Multer.File[];
+}
 export interface AdminRequest extends Request {
   user: User;
   session: Session & { user: User };

@@ -1,6 +1,11 @@
 import express, { Request, Response } from "express";
 import { T } from "../libs/types/common";
-import { LoginInput, User, UserInput } from "../libs/types/user";
+import {
+  ExtendedRequest,
+  LoginInput,
+  User,
+  UserInput,
+} from "../libs/types/user";
 import UserService from "../models/User.service";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import moment from "moment";
@@ -60,6 +65,34 @@ userController.login = async (req: Request, res: Response) => {
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }
+
+  userController.logout = (req: ExtendedRequest, res: Response) => {
+    try {
+      console.log("logout");
+      res.cookie("accessToken", null, { maxAge: 0, httpOnly: true });
+      res.status(HttpCode.OK).json({ logout: true });
+    } catch (err) {
+      console.log("Error, logout:", err);
+      if (err instanceof Errors) res.status(err.code).json(err);
+      else res.status(Errors.standard.code).json(Errors.standard);
+    }
+  };
+
+  userController.getUserDetail = async (
+    req: ExtendedRequest,
+    res: Response
+  ) => {
+    try {
+      console.log("getUserDetailet");
+      const result = await userService.getUserDetail(req.user);
+
+      res.status(HttpCode.OK).json(result);
+    } catch (err) {
+      console.log("Error, getUserDetails:", err);
+      if (err instanceof Errors) res.status(err.code).json(err);
+      else res.status(Errors.standard.code).json(Errors.standard);
+    }
+  };
   userController.verifyAuth = async (req: Request, res: Response) => {
     try {
       let user = null;

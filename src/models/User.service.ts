@@ -54,6 +54,16 @@ class UserService {
     return await this.userModel.findById(user._id).lean().exec();
   }
 
+  public async getUserDetail(user: User): Promise<User> {
+    const userId = shapeIntoMongooseObjectId(user._id);
+    const result = await this.userModel
+      .findOne({ _id: userId, userStatus: UserStatus.ACTIVE })
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+    return result;
+  }
+
   /**BSSR */
 
   public async processSignup(input: UserInput): Promise<User> {
