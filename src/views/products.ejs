@@ -45,10 +45,9 @@
             <!--  LOOP PRODUCTS: START  -->
             <% products.map(function(value, key) { %>
             <tbody style="background: white">
-              <td><%= key + 1%></td>
-              <td><%= value.productName%></td>
-              <td><%= value.productCollection%></td>
-             
+              <td><%= key + 1 %></td>
+              <td><%= value.productName %></td>
+              <td> <%= value.productType %> </td>
               <td><%= value.productPrice%></td>
               <td><%= value.productLeftCount%></td>
               <td>
@@ -124,7 +123,7 @@
           
           <div class="half-input" id="product">
             <label>User Type</label>
-                <select class="product-type" name="productSize">
+                <select class="user-type" name="userType">
                 <option value="MAN" selected >Man</option>
                 <option value="WOMAN" >Woman</option>
                 <option value="CHILDREN">Children</option>
@@ -135,10 +134,10 @@
           <div class="half-input-frame">
             <div class="half-input" id="adult-size">
               <label>Adult Size</label>
-                <select class="product-type" name="productSize">
+                <select class="product-size" name="adultSize">
                   <option value="S">S</option>
                 <option value="M">M</option>
-                <option value="L">L</option>
+                <option value="L" selected>L</option>
                 <option value="Xl">XL</option>
                 <option value="XXL">XXL</option>
               </select>
@@ -146,7 +145,7 @@
             
             <div class="half-input" id="shoes-size" style="display: none">
               <label>Shoes Size</label>
-              <select class="product-shoes-size" name="productShoesSize">
+              <select class="product-shoes-size" name="shoesSize">
                 <option value="230">230</option>
                 <option value="235">235</option>
                 <option value="240">240</option>
@@ -162,10 +161,10 @@
             </div>
             
 
-            <div class="half-input" id="product1">
-              <label>Product Collection </label>
-              <select class="product-collection" name="productCollection">
-                <option value="T-SHIRT" >T-shirt</option>
+            <div class="half-input" id="product">
+              <label>Product Type </label>
+              <select class="product-type" name="productType">
+                <option value="T_SHIRT" >T-shirt</option>
                 <option value="COATS">Coats</option>
                 <option value="JACKETS">Jackets</option>
                 <option value="SHOES">Shoes</option>
@@ -176,7 +175,7 @@
             
             <div class="half-input" id="child-size" style="display: none">
               <label>Children Size</label>
-              <select class="product-child-size" name="productChildSize">
+              <select class="product-child-size" name="childrenSize">
                 <option value="2_T">2-T</option>
                 <option value="3_T">3-T</option>
                 <option value="4_T">4-T</option>
@@ -184,16 +183,7 @@
               </select>
             </div>
 
-            <!-- <div class="half-input" id="product-size" style="display: none">
-              <label>Product Size</label>
-              <select class="product-size" name="productSize">
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="Xl">XL</option>
-                <option value="XXL">XXL</option>
-              </select>
-            </div> -->
+          
           </div>
           <div class="long-input">
             <label>Product Description</label>

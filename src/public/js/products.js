@@ -2,7 +2,7 @@ console.log("Products frontend javascript file");
 
 $(function () {
   $("#product").on("change", () => {
-    const selectedValue = $(".product-type").val();
+    const selectedValue = $(".user-type").val();
     if (selectedValue === "CHILDREN") {
       $("#child-size").show();
       $("#product-collection").show();
@@ -14,7 +14,7 @@ $(function () {
   });
 
   $("#product1").on("change", () => {
-    const selectedValue = $(".product-collection").val();
+    const selectedValue = $(".product-type").val();
     if (selectedValue === "SHOES") {
       $("#shoes-size").show();
       $("#adult-size").hide();
@@ -47,6 +47,7 @@ $(function () {
       console.log("response:", response);
       const result = response.data;
       if (result.data) {
+        console.log("Product updated!");
         $(".new-product-status").blur();
       } else {
         alert("Product update failed!");

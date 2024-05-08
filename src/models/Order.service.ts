@@ -6,16 +6,24 @@ import Errors from "../libs/Errors";
 import { HttpCode } from "../libs/Errors";
 import { Message } from "../libs/Errors";
 import { ObjectId } from "mongoose";
-import { OrderInquiry, OrderItemInput } from "../libs/types/order";
+import {
+  OrderInquiry,
+  OrderItemInput,
+  OrderUpdateInput,
+} from "../libs/types/order";
 import { Order } from "../libs/types/order";
+import UserService from "./User.service";
+import { OrderStatus } from "../libs/enums/order.enum";
 
 class OrderService {
   private readonly orderModel;
   private readonly orderItemModel;
+  private readonly userService;
 
   constructor() {
     this.orderModel = OrderModel;
     this.orderItemModel = OrderItemModel;
+    this.userService = new UserService();
   }
 
   public async createOrder(
@@ -84,21 +92,45 @@ class OrderService {
           },
         },
         {
-            $lookup: {
-                from: "products",
-                localField: "orderItems.productId",
-                foreignField: "_id",
-                as: "productData"
-            }
-        }
+          $lookup: {
+            from: "products",
+            localField: "orderItems.productId",
+            foreignField: "_id",
+            as: "productData",
+          },
+        },
       ])
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
     return result;
   }
+
+  public async orderUpdate(
+    user: User,
+    input: OrderUpdateInput
+  ): Promise<Order> {
+    const userId = shapeIntoMongooseObjectId(user._id),
+      orderId = shapeIntoMongooseObjectId(input.orderId),
+      orderStatus = input.orderStatus;
+
+    const result = await this.orderModel
+      .findByIdAndUpdate(
+        {
+          userId: userId,
+          _id: orderId,
+        },
+        { orderStatus: orderStatus },
+        { new: true }
+      )
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+
+    if (orderStatus === OrderStatus.PROCESS) {
+      await this.userService.addUserPoints(user, 1);
+    }
+    return result;
+  }
 }
-
-
 
 export default OrderService;

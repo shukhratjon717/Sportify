@@ -15,7 +15,7 @@ const orderSchema = new Schema(
       default: OrderStatus.PAUSE,
     },
 
-    memberId: {
+    userId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",

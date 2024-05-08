@@ -1,6 +1,8 @@
 import mongoose, { Schema } from "mongoose";
-import { ProductChildSize, ProductSize } from "../libs/enums/product.enum";
 import { ProductShoesSize } from "../libs/enums/product.enum";
+import { ProductType } from "../libs/enums/product.enum";
+import { ProductChildSize } from "../libs/enums/product.enum";
+import { ProductSize } from "../libs/enums/product.enum";
 import { ProductCollection } from "../libs/enums/product.enum";
 import { ProductStatus } from "../libs/enums/product.enum";
 
@@ -11,20 +13,23 @@ const productSchema = new Schema(
       enum: ProductStatus,
       default: ProductStatus.PAUSE,
     },
+
     productCollection: {
       type: String,
       enum: ProductCollection,
-      required: true,
+      // required: true,
     },
 
     productName: {
       type: String,
       required: true,
     },
+
     productPrice: {
       type: Number,
       required: true,
     },
+
     productLeftCount: {
       type: Number,
       required: true,
@@ -33,24 +38,30 @@ const productSchema = new Schema(
     productSize: {
       type: String,
       enum: ProductSize,
-      default: ProductSize.M,
+      default: ProductSize.XL,
     },
+
     productShoesSize: {
-      type: Number,
+      type: String,
       enum: ProductShoesSize,
-      default: ProductShoesSize.TWO_SEVEN_ZERO,
     },
-    ProductChildSize: {
+
+    productChildSize: {
       type: String,
       enum: ProductChildSize,
-      default: ProductChildSize.THREE_T,
+    },
+
+    productType: {
+      type: String,
+      enum: ProductType,
+      required: true,
     },
 
     productDesc: {
       type: String,
-      required: true,
     },
-    productImage: {
+
+    productImages: {
       type: [String],
       default: [],
     },
@@ -63,9 +74,7 @@ const productSchema = new Schema(
   { timestamps: true }
 );
 
-productSchema.index(
-  { productname: 1, ProductSize: 1, ProductSize2: 1 },
-  { unique: true }
-);
+// Correcting index definition
+productSchema.index({ productName: 1, productSize: 1 }, { unique: true });
 
 export default mongoose.model("Product", productSchema);

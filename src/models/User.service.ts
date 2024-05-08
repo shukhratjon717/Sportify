@@ -30,7 +30,6 @@ class UserService {
     return result;
   }
 
-  
   public async signup(input: UserInput): Promise<User> {
     const salt = await bcrypt.genSalt();
     input.userPassword = await bcrypt.hash(input.userPassword, salt);
@@ -43,6 +42,22 @@ class UserService {
       console.log("Error, model:Signup", err);
       throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
     }
+  }
+
+  public async addUserPoints(user: User, point: number): Promise<User> {
+    const userId = shapeIntoMongooseObjectId(user._id);
+
+    return await this.userModel
+      .findByIdAndUpdate(
+        {
+          _id: userId,
+          userType: UserType.USER,
+          userStstus: UserStatus.ACTIVE,
+        },
+        { $inc: { userPoints: point } },
+        { new: true }
+      )
+      .exec();
   }
 
   public async login(input: LoginInput): Promise<User> {
@@ -156,4 +171,3 @@ class UserService {
 }
 
 export default UserService;
-

@@ -8,7 +8,7 @@ import { Product } from "../libs/types/product";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import { T } from "../libs/types/common";
-import { ProductStatus } from "../libs/enums/product.enum";
+import { ProductSize, ProductStatus } from "../libs/enums/product.enum";
 import { ObjectId } from "mongoose";
 import { ViewInput } from "../libs/types/view";
 import { ViewGroup } from "../libs/enums/view.enum";
@@ -64,7 +64,7 @@ class ProductService {
       })
       .exec();
 
-    if (!result.length) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
     // TODO: If authenticated users => first time => view log creation
     if (userId) {
@@ -76,7 +76,7 @@ class ProductService {
       const existView = await this.viewService.checkViewExistance(input);
 
       console.log("PLANNING TO INSERT NEW VIEW");
-      await this.viewService.inserUserView(input);
+      await this.viewService.insertUserView(input);
 
       result = await this.productModel
         .findByIdAndUpdate(
@@ -103,6 +103,8 @@ class ProductService {
   public async createNewProduct(input: ProductInput): Promise<Product> {
     try {
       console.log("hello world");
+      // input.productSize = ProductSize.XL;
+      console.log("Input=>", input);
       return await this.productModel.create(input);
     } catch (err) {
       console.log("Error of Database, model: createNewProduct:", err);

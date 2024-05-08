@@ -21,16 +21,24 @@ export enum ProductShoesSize {
 }
 
 export enum ProductChildSize {
-  TWO_T = "2T",
-  THREE_T = "3T",
-  FOUR_T = "4T",
-  FIVE_T = "5T",
+  TWO_T = "2_T",
+  THREE_T = "3_T",
+  FOUR_T = "4_T",
+  FIVE_T = "5_T",
 }
 
 export enum ProductStatus {
   PAUSE = "PAUSE",
   PROCESS = "PROCESS",
   DELETE = "DELETE",
+}
+
+export enum ProductType {
+  JACKETS = "JACKETS",
+  SHOES = "SHOES",
+  T_SHIRTS = "T_SHIRTS",
+  COATS = "COATS",
+  SET = "SET",
 }
 
 export enum ProductCollection {
