@@ -154,4 +154,19 @@ userController.verifyAuth = async (
   }
 };
 
+userController.retrieveAuth = async (
+  req: ExtendedRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.cookies["accessToken"];
+    if (token) req.user = await authService.checkAuth(token);
+    next();
+  } catch (err) {
+    console.log("ERROR, retrieveAuth:", err);
+    next();
+  }
+};
+
 export default userController;
