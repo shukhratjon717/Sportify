@@ -28,7 +28,7 @@ router.get("/user/top-users", userController.getTopUsers);
 router.get("/product/all", productController.getProducts);
 router.get(
   "/product/:id",
-  // userController.retrieveAuth,
+  userController.retrieveAuth,
   productController.getProduct
 );
 
@@ -38,6 +38,12 @@ router.post(
   "/order/create",
   userController.verifyAuth,
   orderController.createOrder
+);
+
+router.get(
+  "/order/all",
+  userController.verifyAuth,
+  orderController.getMyOrders
 );
 
 export default router;

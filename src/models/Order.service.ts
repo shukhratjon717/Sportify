@@ -6,7 +6,7 @@ import Errors from "../libs/Errors";
 import { HttpCode } from "../libs/Errors";
 import { Message } from "../libs/Errors";
 import { ObjectId } from "mongoose";
-import { OrderItemInput } from "../libs/types/order";
+import { OrderInquiry, OrderItemInput } from "../libs/types/order";
 import { Order } from "../libs/types/order";
 
 class OrderService {
@@ -61,6 +61,44 @@ class OrderService {
     const orderItemsState = await Promise.all(promisedList);
     console.log("orderItemState:", orderItemsState);
   }
+
+  public async getMyOrders(
+    user: User,
+    inquiry: OrderInquiry
+  ): Promise<Order[]> {
+    const userId = shapeIntoMongooseObjectId(user._id);
+    const matches = { memberId: userId, orderStatus: inquiry.orderStatus };
+
+    const result = await this.orderModel
+      .aggregate([
+        { $match: matches },
+        { $sort: { updateAt: -1 } },
+        { $skip: (inquiry.page - 1) * inquiry.limit },
+        { $limit: inquiry.limit },
+        {
+          $lookup: {
+            from: "orderItems",
+            localField: "_id",
+            foreignField: "orderId",
+            as: "orderItems",
+          },
+        },
+        {
+            $lookup: {
+                from: "products",
+                localField: "orderItems.productId",
+                foreignField: "_id",
+                as: "productData"
+            }
+        }
+      ])
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+    return result;
+  }
 }
+
+
 
 export default OrderService;
