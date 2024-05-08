@@ -45,7 +45,7 @@ class ProductService {
         { $limit: inquiry.limit * 1 },
       ])
       .exec();
-    if (!result.length)
+    if (!result)
       throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
     return result;
@@ -102,9 +102,6 @@ class ProductService {
 
   public async createNewProduct(input: ProductInput): Promise<Product> {
     try {
-      console.log("hello world");
-      // input.productSize = ProductSize.XL;
-      console.log("Input=>", input);
       return await this.productModel.create(input);
     } catch (err) {
       console.log("Error of Database, model: createNewProduct:", err);
