@@ -5,7 +5,7 @@ import productController from "./controllers/product.controller";
 import userController from "./controllers/user.controller";
 import orderController from "./controllers/order.controller";
 
-router.get("/user/restaurant", userController.getRestaurant);
+router.get("/user/shop", userController.getShop);
 router.post("/user/login", userController.login);
 router.post("/user/signup", userController.signup);
 router.post("/user/logout", userController.verifyAuth, userController.logout);

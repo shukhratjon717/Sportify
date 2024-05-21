@@ -20,7 +20,7 @@ class UserService {
 
   /**SPA */
 
-  public async getRestaurant(): Promise<User> {
+  public async getShop(): Promise<User> {
     const result = await this.userModel
       .findOne({ userType: UserType.SHOP })
       .lean()
