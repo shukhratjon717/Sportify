@@ -26,11 +26,12 @@ class ProductService {
   /** SPA Starter */
   public async getProducts(inquiry: ProductInquiry): Promise<Product[]> {
     const match: T = { productStatus: ProductStatus.PROCESS };
-    if (inquiry.productCollection)
-      match.produtCollection = inquiry.productCollection;
+    console.log("productType1:", inquiry)
+    if (inquiry.productType) match.productType = inquiry.productType;
     if (inquiry.search) {
       match.productName = { $regex: new RegExp(inquiry.search, "i") };
     }
+    console.log("productType2:", inquiry.productType)
 
     const sort: T =
       inquiry.order === "productPrice"
@@ -45,8 +46,7 @@ class ProductService {
         { $limit: inquiry.limit * 1 },
       ])
       .exec();
-    if (!result)
-      throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
     return result;
   }
@@ -75,16 +75,18 @@ class ProductService {
       };
       const existView = await this.viewService.checkViewExistance(input);
 
-      console.log("PLANNING TO INSERT NEW VIEW");
-      await this.viewService.insertUserView(input);
+      if (!existView) {
+        console.log("PLANNING TO INSERT NEW VIEW");
+        await this.viewService.insertUserView(input);
 
-      result = await this.productModel
-        .findByIdAndUpdate(
-          productId,
-          { $inc: { productViews: +1 } },
-          { new: true }
-        )
-        .exec();
+        result = await this.productModel
+          .findByIdAndUpdate(
+            productId,
+            { $inc: { productViews: +1 } },
+            { new: true }
+          )
+          .exec();
+      }
     }
 
     return result;
