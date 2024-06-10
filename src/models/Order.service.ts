@@ -75,7 +75,7 @@ class OrderService {
     inquiry: OrderInquiry
   ): Promise<Order[]> {
     const userId = shapeIntoMongooseObjectId(user._id);
-    const matches = { memberId: userId, orderStatus: inquiry.orderStatus };
+    const matches = { userId: userId, orderStatus: inquiry.orderStatus };
 
     const result = await this.orderModel
       .aggregate([
@@ -97,14 +97,6 @@ class OrderService {
             localField: "orderItems.productId",
             foreignField: "_id",
             as: "productData",
-          },
-        },
-        {
-          $lookup: {
-            from: "members",
-            localField: "memberId",
-            foreignField: "_id",
-            as: "memberData",
           },
         },
       ])
